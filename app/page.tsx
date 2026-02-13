@@ -1,65 +1,134 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect, useState } from 'react';
+import SearchFilters from '@/components/search-filters';
+import MaterialCard from '@/components/material-card';
+import { BookOpen } from 'lucide-react';
+
+interface Material {
+  id: number;
+  title: string;
+  description?: string;
+  department: string;
+  semester: string;
+  scheme: string;
+  subject: string;
+  material_type: string;
+  file_link: string;
+  contributor_name: string;
+  contributor_batch: string;
+  contributor_year: string;
+  view_count: number;
+  download_count: number;
+}
+
+export default function HomePage() {
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Track visit on page load
+    fetch('/api/analytics/visit', { method: 'POST' });
+  }, []);
+
+  const handleFilterChange = async (filters: {
+    department: string;
+    semester: string;
+    scheme: string;
+    subject: string;
+  }) => {
+    // Only search if at least one filter is selected
+    if (!filters.department && !filters.semester && !filters.scheme && !filters.subject) {
+      setMaterials([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filters.department) params.append('department', filters.department);
+      if (filters.semester) params.append('semester', filters.semester);
+      if (filters.scheme) params.append('scheme', filters.scheme);
+      if (filters.subject) params.append('subject', filters.subject);
+
+      const response = await fetch(`/api/materials/search?${params}`);
+      const data = await response.json();
+      setMaterials(data);
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleView = async (id: number) => {
+    try {
+      await fetch(`/api/materials/${id}/view`, { method: 'POST' });
+    } catch (error) {
+      console.error('View tracking error:', error);
+    }
+  };
+
+  const handleDownload = async (id: number, link: string, isVideo: boolean) => {
+    try {
+      await fetch(`/api/materials/${id}/download`, { method: 'POST' });
+      if (!isVideo) {
+        const a = document.createElement('a');
+        a.href = link;
+        a.download = link.split('/').pop() || 'download';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error('Download tracking error:', error);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <BookOpen className="w-12 h-12 text-white" />
+            <h1 className="text-5xl font-bold text-white">
+              Material Library
+            </h1>
+          </div>
+          <p className="text-xl text-white/80">
+            Access academic materials with ease
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="mb-8">
+          <SearchFilters onFilterChange={handleFilterChange} />
         </div>
-      </main>
+
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white"></div>
+            <p className="text-white mt-4 text-lg">Searching materials...</p>
+          </div>
+        ) : materials.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {materials.map((material) => (
+              <MaterialCard
+                key={material.id}
+                material={material}
+                onView={handleView}
+                onDownload={handleDownload}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <BookOpen className="w-24 h-24 text-white/30 mx-auto mb-4" />
+            <p className="text-white/60 text-lg">
+              Select filters to search for materials
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
