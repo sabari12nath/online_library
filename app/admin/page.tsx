@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import StatsDisplay from '@/components/stats-display';
 import UploadForm from '@/components/upload-form';
-import { Shield, Home } from 'lucide-react';
+import { Shield, Home, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -32,33 +32,49 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-            <div className="container mx-auto px-4 py-12">
-                <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center gap-3">
-                        <div className="p-3 rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
-                            <Shield className="w-8 h-8 text-white" />
+        <div className="min-h-screen bg-slate-950 text-white">
+            {/* Navigation */}
+            <nav className="border-b border-white/10 bg-slate-900/50 backdrop-blur-xl">
+                <div className="container mx-auto px-6 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg">
+                                <Shield className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                                <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+                                <p className="text-slate-400 text-sm">Manage materials and view analytics</p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-4xl font-bold text-white">Admin Dashboard</h1>
-                            <p className="text-white/70">Manage materials and view analytics</p>
+                        <div className="flex gap-3">
+                            <Link href="/library">
+                                <Button
+                                    variant="outline"
+                                    className="bg-white/5 hover:bg-white/10 text-white border-white/10"
+                                >
+                                    <BookOpen className="w-4 h-4 mr-2" />
+                                    Library
+                                </Button>
+                            </Link>
+                            <Link href="/">
+                                <Button
+                                    variant="outline"
+                                    className="bg-white/5 hover:bg-white/10 text-white border-white/10"
+                                >
+                                    <Home className="w-4 h-4 mr-2" />
+                                    Home
+                                </Button>
+                            </Link>
                         </div>
                     </div>
-                    <Link href="/">
-                        <Button
-                            variant="outline"
-                            className="bg-white/10 hover:bg-white/20 text-white border-white/30"
-                        >
-                            <Home className="w-4 h-4 mr-2" />
-                            Student View
-                        </Button>
-                    </Link>
                 </div>
+            </nav>
 
+            <div className="container mx-auto px-6 py-12">
                 {loading ? (
                     <div className="text-center py-20">
-                        <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white"></div>
-                        <p className="text-white mt-4 text-lg">Loading dashboard...</p>
+                        <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-cyan-500"></div>
+                        <p className="text-slate-400 mt-4 text-lg">Loading dashboard...</p>
                     </div>
                 ) : (
                     <>

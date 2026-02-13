@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -58,82 +57,80 @@ export default function SearchFilters({ onFilterChange }: SearchFiltersProps) {
     };
 
     return (
-        <Card className="backdrop-blur-xl bg-white/10 border-white/20 shadow-2xl">
-            <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="department" className="text-white font-medium">
-                            Department
-                        </Label>
-                        <Select onValueChange={(value) => handleFilterChange('department', value)}>
-                            <SelectTrigger id="department" className="bg-white/10 border-white/30 text-white">
-                                <SelectValue placeholder="Select Department" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {DEPARTMENTS.map((dept) => (
-                                    <SelectItem key={dept} value={dept}>
-                                        {dept}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="semester" className="text-white font-medium">
-                            Semester
-                        </Label>
-                        <Select onValueChange={(value) => handleFilterChange('semester', value)}>
-                            <SelectTrigger id="semester" className="bg-white/10 border-white/30 text-white">
-                                <SelectValue placeholder="Select Semester" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {SEMESTERS.map((sem) => (
-                                    <SelectItem key={sem} value={sem}>
-                                        {sem}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="scheme" className="text-white font-medium">
-                            Scheme
-                        </Label>
-                        <Select onValueChange={(value) => handleFilterChange('scheme', value)}>
-                            <SelectTrigger id="scheme" className="bg-white/10 border-white/30 text-white">
-                                <SelectValue placeholder="Select Scheme" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {SCHEMES.map((sch) => (
-                                    <SelectItem key={sch} value={sch}>
-                                        {sch}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="subject" className="text-white font-medium">
-                            Subject
-                        </Label>
-                        <Select onValueChange={(value) => handleFilterChange('subject', value)}>
-                            <SelectTrigger id="subject" className="bg-white/10 border-white/30 text-white">
-                                <SelectValue placeholder="Select Subject" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {SUBJECTS.map((subj) => (
-                                    <SelectItem key={subj} value={subj}>
-                                        {subj}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+        <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900/50 to-slate-800/50 border border-white/10 backdrop-blur-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="department" className="text-white font-medium">
+                        Department
+                    </Label>
+                    <Select onValueChange={(value) => handleFilterChange('department', value)}>
+                        <SelectTrigger id="department" className="bg-white/10 border-white/30 text-white">
+                            <SelectValue placeholder="Select Department" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {DEPARTMENTS.map((dept) => (
+                                <SelectItem key={dept} value={dept}>
+                                    {dept}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
-            </CardContent>
-        </Card>
+
+                <div className="space-y-2">
+                    <Label htmlFor="semester" className="text-white font-medium">
+                        Semester
+                    </Label>
+                    <Select onValueChange={(value) => handleFilterChange('semester', value)}>
+                        <SelectTrigger id="semester" className="bg-white/10 border-white/30 text-white">
+                            <SelectValue placeholder="Select Semester" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {SEMESTERS.map((sem) => (
+                                <SelectItem key={sem} value={sem}>
+                                    {sem}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="scheme" className="text-white font-medium">
+                        Scheme
+                    </Label>
+                    <Select onValueChange={(value) => handleFilterChange('scheme', value)}>
+                        <SelectTrigger id="scheme" className="bg-white/10 border-white/30 text-white">
+                            <SelectValue placeholder="Select Scheme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {SCHEMES.map((sch) => (
+                                <SelectItem key={sch} value={sch}>
+                                    {sch}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="subject" className="text-white font-medium">
+                        Subject
+                    </Label>
+                    <Select onValueChange={(value) => handleFilterChange('subject', value)}>
+                        <SelectTrigger id="subject" className="bg-white/10 border-white/30 text-white">
+                            <SelectValue placeholder="Select Subject" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {SUBJECTS.map((subj) => (
+                                <SelectItem key={subj} value={subj}>
+                                    {subj}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+        </div>
     );
 }
